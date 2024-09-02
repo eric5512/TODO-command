@@ -1,29 +1,27 @@
-use std::{fs, io};
+use std::fs;
 use std::path::Path;
-use std::io::BufRead;
+use std::ffi::OsStr;
+use regex::Regex;
+
+mod regexlang;
+mod fileutil;
 
 fn main() {
     visit_files_rec("./");
 }
 
-fn find_todos(path: &Path) {
-    let file = fs::File::open(&path).unwrap();
-    let lines = io::BufReader::new(file).lines();
-    let mut ret: Vec<&str> = vec![];
-    let mut first = true;
+fn print_todos(path: &Path, regex: Regex) {
+    let text = fileutil::get_file_text(path);
 
-    for line in lines {
-        if let Ok(line) = line {
-            let mut aux = line.split("TODO: ");
-            aux.next();
-            if let Some(text) = aux.next() {
-                if first {
-                    println!("{}", path.display());
-                    first = false;
-                }
+    let matches = regexlang::get_matches(text, regex);
 
-                println!("\t{}", text);
-            }
+    if matches.len() > 0 {
+        print!("Found {} TODOS in file {}", matches.len(), path.display());
+        
+        for ma in matches {
+            let (line, col, text) = ma;
+            print!("\t{}:{}:{} {}", path.display(), line, col, text);
+
         }
     }
 }
@@ -31,10 +29,10 @@ fn find_todos(path: &Path) {
 fn visit_files_rec(path: &str) {
     for path in fs::read_dir(path).unwrap() {
         let file_path = path.unwrap().path();
-        if file_path.is_dir() {
+        if let Some(regex) = file_path.extension().and_then(OsStr::to_str).and_then(regexlang::get_file_regex) {
+            print_todos(&file_path, regex);
+        } else if file_path.is_dir() {
             visit_files_rec(file_path.to_str().unwrap());
-        } else {
-            find_todos(&file_path);
         }
     }
 }
