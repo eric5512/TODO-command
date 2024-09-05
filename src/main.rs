@@ -13,15 +13,14 @@ fn main() {
 fn print_todos(path: &Path, regex: Regex) {
     let text = fileutil::get_file_text(path);
 
-    let matches = regexlang::get_matches(text, regex);
+    let matches = regexlang::get_matches(&text, regex);
 
     if matches.len() > 0 {
-        print!("Found {} TODOS in file {}", matches.len(), path.display());
+        print!("Found {} TODOS in file {}\n", matches.len(), path.display());
         
         for ma in matches {
             let (line, col, text) = ma;
-            print!("\t{}:{}:{} {}", path.display(), line, col, text);
-
+            print!("\t{}:{}:{} {}\n", path.display(), line, col, text);
         }
     }
 }
