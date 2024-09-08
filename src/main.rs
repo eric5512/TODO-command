@@ -10,7 +10,7 @@ mod fileutil;
 
 /// Simple program to retrieve the TODOS in a project
 #[derive(Parser, Debug)]
-#[command(version="v1.0", about, long_about = None)]
+#[command(version, about, long_about = None)]
 struct Args {
     /// Look recursively into the nested folders
     #[arg(short, long)]
