@@ -7,6 +7,7 @@ pub fn get_file_regex(ext: &str) -> Option<Regex> {
         "ml" | "mli" => Some(Regex::new(r"\(\*\*?([^*]|([*][^)]))*TODO:([^*]|([*][^)]))*\**\*\)").unwrap()),
         "py" => Some(Regex::new(r#"(#.*TODO:*.)|("""([^"])*TODO:([^"])*""")"#).unwrap()),
         "rs" => Some(Regex::new(r"(//.*TODO:.*)|(/[*]([^*]|([*][^/]))*TODO:([^*]|([*][^/]))*[*]+/)").unwrap()),
+        "java" => Some(Regex::new(r"(//.*TODO:.*)|(/[*]([^*]|([*][^/]))*TODO:([^*]|([*][^/]))*[*]+/)").unwrap()),
         _ => None
     }
 }
