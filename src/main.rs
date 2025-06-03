@@ -12,6 +12,11 @@ mod fileutil;
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
+    /// Directory to search into
+    #[arg()]
+    path: String,
+    
+
     /// Look recursively into the nested folders
     #[arg(short, long)]
     recursive: bool,
@@ -23,7 +28,7 @@ struct Args {
 
 fn main() {
     let args: Args = Args::parse();
-    visit_files_rec("./", &args);
+    visit_files_rec(&args.path, &args);
 }
 
 fn print_todos(path: &Path, regex: Regex) {
